@@ -1,4 +1,4 @@
-# [Our Website](https://car-accident-sharing-git-main-yyeonkim.vercel.app/)
+# [Our Website](https://car-accident-sharing.vercel.app)
 
 # Using Stack
 
