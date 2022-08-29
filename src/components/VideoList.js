@@ -2,16 +2,14 @@ import { Box, Center, Circle, Stack } from "@chakra-ui/react";
 import { BsFillPlayFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
 
-import { videos } from "../db";
-
-export default function VideoList() {
+export default function VideoList({ videos }) {
   return (
     <Stack
       spacing="2rem"
       sx={{ "--video-width": "320px", " --video-height": "180px" }}
     >
       {videos.map((video) => (
-        <Link to={"/expert/videos/" + video.id} key={video.id}>
+        <Link to={`/expert/videos/${video.id}`} key={video.id}>
           <Center
             position="relative"
             w="var(--video-width)"

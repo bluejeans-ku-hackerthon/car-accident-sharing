@@ -1,21 +1,33 @@
-import { Center, Flex } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
+import { useParams } from "react-router-dom";
+
+import LoadingAnimation from "../components/LoadingAnimation";
 import OpinionArea from "../components/OpinionArea";
 import Ratio from "../components/Ratio";
+import useFetchVideoName from "../hooks/useFetchVideoName";
 
 export default function VideoReviewPage() {
+  const { videoId } = useParams();
+  const { videoName, isLoading } = useFetchVideoName(videoId);
+
   return (
-    <Center>
-      <Flex width="100%" direction="column" justifyContent="center">
-        <video
-          src="https://firebasestorage.googleapis.com/v0/b/gongcha-2b0f0.appspot.com/o/video1.mp4?alt=media&token=bcfa20a6-1bec-481f-aa4f-97429565a190"
-          controls
-          width="100%"
-        ></video>
-        <Flex direction="column" p="3rem">
-          <Ratio />
-          <OpinionArea />
-        </Flex>
-      </Flex>
-    </Center>
+    <Flex width="100%" direction="column" justifyContent="center">
+      {isLoading ? (
+        <LoadingAnimation />
+      ) : (
+        <>
+          <video
+            autoPlay
+            src={`https://firebasestorage.googleapis.com/v0/b/gongcha-2b0f0.appspot.com/o/${videoName}?alt=media`}
+            controls
+            width="100%"
+          ></video>
+          <Flex direction="column" p="3rem">
+            <Ratio />
+            <OpinionArea />
+          </Flex>
+        </>
+      )}
+    </Flex>
   );
 }

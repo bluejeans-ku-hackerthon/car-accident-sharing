@@ -1,39 +1,67 @@
 import { Heading, Stack, useDisclosure } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useRecoilValue } from "recoil";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { useParams } from "react-router-dom";
 
-import { videos } from "../db";
+import { leftRatioState, rightRatioState } from "../atom";
 import ReviewAlertDialog from "./ReviewAlertDialog";
+import { db } from "../firebase";
+import LoadingAnimation from "./LoadingAnimation";
 
 export default function OpinionArea() {
-  const [opinion, setOpinion] = useState("");
+  const leftRatio = useRecoilValue(leftRatioState);
+  const rightRatio = useRecoilValue(rightRatioState);
+  const [isLoading, setIsLoading] = useState(false);
+  const { videoId } = useParams();
 
   const { register, watch, handleSubmit } = useForm();
-  const { videoId } = useParams();
   const control = useDisclosure();
   const completeRef = React.useRef();
 
-  const onValid = (data) => {
-    setOpinion("");
-    // DB 수정 (Loading.....)
+  const onValid = async ({ comment }) => {
+    await updateDBWithComment(comment);
     control.onOpen();
+  };
+
+  const updateDBWithComment = async (comment) => {
+    setIsLoading(true);
+
+    const docRef = doc(db, "videos", videoId);
+    const docSnap = await getDoc(docRef);
+
+    await setDoc(doc(db, "videos", videoId), {
+      ...docSnap.data(),
+      ratio: `${leftRatio} : ${rightRatio}`,
+      comments: {
+        ...docSnap.data().comments,
+        meritz: {
+          ratio: `${leftRatio} : ${rightRatio}`,
+          comment,
+        },
+      },
+    });
+
+    setIsLoading(false);
   };
 
   return (
     <Stack spacing="2rem">
+      {isLoading && <LoadingAnimation />}
+
       <Heading size="md">의견</Heading>
       <form onSubmit={handleSubmit(onValid)}>
         <textarea
           style={inputStyle}
-          {...register("opinion", { required: true })}
+          {...register("comment", { required: true })}
         />
         <button
           style={{
             ...buttonStyle,
-            backgroundColor: watch("opinion") ? "#3F8CFF" : "gray",
+            backgroundColor: watch("comment") ? "#3F8CFF" : "#9A9A9A",
           }}
-          disabled={watch("opinion") ? false : true}
+          disabled={watch("comment") ? false : true}
         >
           완료
         </button>

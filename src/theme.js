@@ -6,6 +6,11 @@ export const customeTheme = extendTheme({
     body: "Roboto",
   },
 
+  colors: {
+    gray: "#9A9A9A",
+    blue: "#3F8CFF",
+  },
+
   styles: {
     global: {
       html: {

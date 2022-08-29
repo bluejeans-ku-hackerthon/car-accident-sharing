@@ -8,6 +8,7 @@ import { RecoilRoot } from "recoil";
 import Router from "./routes/Router";
 import { customeTheme } from "./theme";
 import * as serviceWorker from "./serviceWorkerRegistration";
+import Layout from "./components/Layout";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -15,7 +16,9 @@ root.render(
     <BrowserRouter>
       <ChakraProvider theme={customeTheme}>
         <RecoilRoot>
-          <Router />
+          <Layout>
+            <Router />
+          </Layout>
         </RecoilRoot>
       </ChakraProvider>
     </BrowserRouter>

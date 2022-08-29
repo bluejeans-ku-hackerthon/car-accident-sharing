@@ -13,3 +13,16 @@ export const rightRatioState = selector({
     return 10 - leftRatio;
   },
 });
+
+export const resultVideoState = atom({
+  key: "resultVideo",
+  default: {},
+});
+
+export const resultVideoCommentsState = selector({
+  key: "resultVideoComments",
+  get: ({ get }) => {
+    const resultVideo = get(resultVideoState);
+    return resultVideo.comments ? resultVideo.comments : {};
+  },
+});
